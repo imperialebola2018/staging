@@ -1,7 +1,7 @@
 Vagrant.require_version ">= 1.8.2"
 
 domain = 'localdomain'
-box = "bento/ubuntu-18.04"
+box = "bento/ubuntu-16.04"
 ram_size_mb = '16384'
 data_disk_size_gb = 100
 
@@ -15,6 +15,7 @@ Vagrant.configure(2) do |config|
   config.persistent_storage.filesystem = "ext4"
   config.persistent_storage.mountpoint = "/mnt/data"
   config.persistent_storage.size = data_disk_size_gb * 1024
+  config.persistent_storage.location = "disk.vdi"
 
   config.vm.provision :shell do |shell|
     shell.path = 'provision/setup-docker'
