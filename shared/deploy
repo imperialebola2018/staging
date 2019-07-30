@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e
+if [ ! -d ebola-server ]; then
+    git clone https://github.com/imperialebola2018/ebola-server
+else
+    git -C ebola-server pull
+fi
+
+sudo -H pip3 install -r ebola-server/requirements.txt
+
+if [ ! -f /vagrant/.vault_token ]; then
+    echo "Please run scripts/vault-login"
+    exit 1
+fi
+cp /vagrant/.vault_token ebola-server
+
+./ebola-server/ebola-server set-configuration staging
+./ebola-server/ebola-server vault-login
+./ebola-server/ebola-server import-orderly-volume /vagrant/ebola-outputs
+./ebola-server/ebola-server start
+
+if [ ! -d ebola-outputs ]; then
+    git clone https://github.com/imperialebola2018/ebola-orderly
+else
+    git -C ebola-outputs pull
+fi
+
+
+cp ebola-server/staging
