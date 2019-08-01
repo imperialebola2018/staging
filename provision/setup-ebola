@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e
+
+if [ `id -u` -eq 0 ]; then
+    echo "This script is designed to be run by an ordinary user"
+    exit 1
+fi
+
+. /vagrant/vault_config
+
+git clone https://github.com/vimc/orderly-web-deploy
+sudo -H pip3 install -r orderly-web-deploy/requirements.txt
+(cd orderly-web-deploy && python3 setup.py install --user)
+
+git clone https://github.com/imperialebola2018/ebola-orderly-web
+orderly-web start ebola-orderly-web/config --extra testing

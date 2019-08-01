@@ -5,6 +5,13 @@ box = "bento/ubuntu-16.04"
 ram_size_mb = '16384'
 data_disk_size_gb = 100
 
+vault_config_file = 'shared/vault_config'
+if !File.file?(vault_config_file)
+  raise "Run ./staging/scripts/vault-prepare first!"
+end
+vault_config = Hash[File.read(vault_config_file).split("\n").
+                     map{|s| s.split('=')}]
+
 Vagrant.configure(2) do |config|
   config.vm.box = box
   config.vm.synced_folder 'shared', '/vagrant'
@@ -39,5 +46,11 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell do |shell|
     shell.path = 'provision/setup-hostname'
     shell.args = 'testing'
+  end
+
+  config.vm.provision :shell do |shell|
+    shell.path = 'provision/setup-ebola'
+    shell.env = vault_config
+    shell.privileged = false
   end
 end

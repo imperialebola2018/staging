@@ -1,1 +1,2 @@
-shared/.vault_token
+shared/vault_config
+.vagrant
