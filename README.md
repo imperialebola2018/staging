@@ -31,6 +31,7 @@ then
 
 ```
 vagrant up
+cp scripts/ssh-testing ~server
 ```
 
 After a while you should be able to log into https://ebola2018.dide.ic.ac.uk:1443
